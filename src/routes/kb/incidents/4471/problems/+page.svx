@@ -14,9 +14,9 @@ signature: 'v1.eyJzdWIiOiIzMDgxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpY
 
   const repo = 'https://github.com/przytrzask/mega-s01e03-kb/issues';
   const TICKETS = {
-    parser: { label: '#1', href: `${repo}/1` },
-    hint: { label: '#2', href: `${repo}/2` },
-    'one-day': { label: '#3', href: `${repo}/3` },
+    parser: { label: '#1', href: `${repo}/1`, state: 'closed: fixed' },
+    hint: { label: '#2', href: `${repo}/2`, state: "closed: won't fix" },
+    'one-day': { label: '#3', href: `${repo}/3`, state: 'open' },
   };
 </script>
 
@@ -24,8 +24,9 @@ signature: 'v1.eyJzdWIiOiIzMDgxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpY
 three problems. Each one now has its own ticket, so a fix for one is not taken as a fix for all.
 
 <Callout kind="warn">
-The queued parser fix closes the <code>parser</code> problem only. <code>hint</code> and
-<code>one-day</code> stay broken after it ships.
+Engineering closed #4471 on 5 October: <code>parser</code> fixed, <code>hint</code> won't fix
+(the <code>booking-v3</code> form is retired). Nobody fixed <code>one-day</code>, and the parser fix
+does not touch it, so its ticket stays open.
 </Callout>
 
 ## The problems in #4471
@@ -35,15 +36,15 @@ The queued parser fix closes the <code>parser</code> problem only. <code>hint</c
 ### `parser`: the shared parser reads dates month first
 
 A day-first tenant's date comes out with day and month swapped: "Booked for 2 December. The invite says
-12 February." This is what #4471 describes. It covers every report from a day-first tenant that came in
-by app or email, and form reports from tenants on `booking-v2`. Fix: parse in the tenant's locale.
+12 February." This is what #4471 describes, and engineering fixed it (`fix(dates): parse dd/mm for eu locales`). It covers every report from a day-first tenant that came in
+by app or email, and form reports from tenants on `booking-v2`.
 
 ### `hint`: the `booking-v3` form tells day-first people to type month first
 
 `booking-v3` prints `MM/DD/YYYY` under its date field. People follow the hint, and the form reads what
 they typed the tenant's way, day first. The swap looks the same as `parser`, but it comes from the form,
 so the parser fix does not touch it. It covers form reports from the day-first tenants on `booking-v3`.
-Fix: print the hint in the tenant's order, and read the field in that same order.
+Won't fix: engineering retired the `booking-v3` form, which removes the hint.
 
 ### `one-day`: bookings move by exactly one day
 

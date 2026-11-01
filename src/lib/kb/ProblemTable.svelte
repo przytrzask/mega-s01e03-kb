@@ -6,7 +6,7 @@
   import { problemRows, type Problem } from '#lib/kb/problems';
 
   // `tickets`: where each problem is tracked now, e.g. { parser: { label: '#1', href: '…' } }.
-  let { ticket, tickets = {} }: { ticket: number; tickets?: Partial<Record<Problem, { label: string; href: string }>> } =
+  let { ticket, tickets = {} }: { ticket: number; tickets?: Partial<Record<Problem, { label: string; href: string; state?: string }>> } =
     $props();
 
   // The same reports the desk's CauseTable counts: one id, one report, merged into this ticket.
@@ -39,7 +39,7 @@
         </td>
         <td>{r.tenants}</td>
         <td>{r.firstSeen} → {r.lastSeen}</td>
-        <td>{#if t}<a href={t.href}>{t.label}</a>{:else}<span class="warn">none yet</span>{/if}</td>
+        <td>{#if t}<a href={t.href}>{t.label}</a>{#if t.state} <span class="muted">{t.state}</span>{/if}{:else}<span class="warn">none yet</span>{/if}</td>
       </tr>
     {/each}
   </tbody>
