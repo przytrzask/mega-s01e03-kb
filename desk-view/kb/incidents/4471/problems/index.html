@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="../../../../_app/immutable/entry/start.BcVBGXSj.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/DMBl77jv.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/BNdUwxC7.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/DAIGX0FW.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/entry/app.DnEPaCpW.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/CW8-KlJC.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/Dhqnqr81.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/kg7c17AK.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/C9p8Wzbc.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/nodes/0.BD2A-L_u.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/D2euU0BF.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/nodes/5.DCbh80Zk.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/1e_Yvm8o.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/DG066zjG.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/CYh5X32v.js" rel="modulepreload">
+		<link href="../../../../_app/immutable/chunks/iXLSwIXB.js" rel="modulepreload">
+		<!--e2jw2j--><!----><title>#4471 · three problems, not one · support kb</title>
+		<link href="../../../../_app/immutable/assets/runbook.BhhgOc_n.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/Callout.yLErXQDM.css" rel="stylesheet">
+		<link href="../../../../_app/immutable/assets/5.D66mNnel.css" rel="stylesheet">
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[0--><!--[--><!--[--><div class="kb svelte-e2jw2j"><header><a class="crumb svelte-e2jw2j" href="/kb">support desk · kb</a> <h1 class="svelte-e2jw2j">#4471 · three problems, not one</h1> <p class="meta svelte-e2jw2j"><span>owner <b>Tomasz Trzaskoma</b></span> <span class="status open svelte-e2jw2j">open</span> <span class="svelte-e2jw2j">reviewed 2026-11-01 · 0 days ago</span></p></header> <!--[-1--><!--]--> <main><p><a href="/kb/incidents/4471">#4471</a> says one bug: the parser reads dates month first. The reports in it show
+three problems. Each one now has its own ticket, so a fix for one is not taken as a fix for all.</p> <aside class="warn svelte-17bri61"><!---->The queued parser fix closes the <code>parser</code> problem only. <code>hint</code> and <code>one-day</code> stay broken after it ships.<!----></aside><!----> <h2>The problems in #4471</h2> <p class="sum svelte-1op6c6"><strong>412</strong> reports in #4471 <span class="muted svelte-1op6c6">(427 rows in the export; repeated ids counted once)</span> · <strong>3</strong> problems</p> <table><thead><tr><th>problem</th><th>reports</th><th>tenants</th><th>came in by</th><th>seen</th><th>ticket</th></tr></thead><tbody><!--[--><tr><td><code>parser</code></td><td><strong>374</strong></td><td>11</td><td class="muted svelte-1op6c6">app ×202 · email ×147 · form ×25</td><td>2026-04-01 → 2026-10-04</td><td><!--[0--><a href="https://github.com/przytrzask/mega-s01e03-kb/issues/1">#1</a><!--]--></td></tr><tr><td><code>hint</code></td><td><strong>33</strong></td><td>3</td><td class="muted svelte-1op6c6">form ×33</td><td>2026-04-17 → 2026-09-22</td><td><!--[0--><a href="https://github.com/przytrzask/mega-s01e03-kb/issues/2">#2</a><!--]--></td></tr><tr><td><code>one-day</code></td><td><strong>5</strong></td><td>5</td><td class="muted svelte-1op6c6">email ×3 · app ×2</td><td>2026-04-02 → 2026-10-04</td><td><!--[0--><a href="https://github.com/przytrzask/mega-s01e03-kb/issues/3">#3</a><!--]--></td></tr><!--]--></tbody><tfoot class="svelte-1op6c6"><tr><td class="svelte-1op6c6">total</td><td class="svelte-1op6c6"><strong>412</strong></td><td colspan="4" class="svelte-1op6c6">every report in #4471 placed once</td></tr></tfoot></table> <!--[--><p class="ids svelte-1op6c6"><code>one-day</code>: R-41202, R-41209, R-41236, R-41344, R-41620</p><!--]--><!----> <h3><code>parser</code>: the shared parser reads dates month first</h3> <p>A day-first tenant’s date comes out with day and month swapped: “Booked for 2 December. The invite says
+12 February.” This is what #4471 describes. It covers every report from a day-first tenant that came in
+by app or email, and form reports from tenants on <code>booking-v2</code>. Fix: parse in the tenant’s locale.</p> <h3><code>hint</code>: the <code>booking-v3</code> form tells day-first people to type month first</h3> <p><code>booking-v3</code> prints <code>MM/DD/YYYY</code> under its date field. People follow the hint, and the form reads what
+they typed the tenant’s way, day first. The swap looks the same as <code>parser</code>, but it comes from the form,
+so the parser fix does not touch it. It covers form reports from the day-first tenants on <code>booking-v3</code>.
+Fix: print the hint in the tenant’s order, and read the field in that same order.</p> <h3><code>one-day</code>: bookings move by exactly one day</h3> <p>“Invite says Tuesday 12 May. Calendar says Monday 11 May.” “Client in Lisbon got Tuesday. Client in
+Toronto got Monday.” A day–month swap cannot do this: it moves a date by months. These point at a time
+zone or day-boundary fault: a date taken at midnight in one zone and shown in another. The desk had
+already read them as one-day moves (<code>desk-notes.json</code>) and footnoted them under <code>parser</code>; here they are a
+problem of their own. Fix: store a booking as a calendar date plus the tenant’s time zone, not as a
+midnight timestamp.</p> <h2>How each report is placed</h2> <ol><li>Count each report once: the export repeats some ids.</li> <li>If the desk read it as a one-day move, it is <code>one-day</code>.</li> <li>Otherwise <code>causes.ts</code> decides by tenant, not by intake’s tag: a form report from a day-first tenant
+on <code>booking-v3</code> is <code>hint</code>; any other report from a day-first tenant is <code>parser</code>.</li></ol> <p>The logic is in <code>#lib/kb/problems.ts</code>, and the table runs it at render time, so the counts follow the
+data as the desk keeps merging.</p> <h2>Why #4471 held all three</h2> <p><a href="/kb/decisions/0001-dedupe-by-subject">Decision 0001</a> merges on subject alone, and all three problems
+arrive with the same subjects: “Wrong day on the invite”, “Date is wrong”. Intake’s tag guesses from the
+reporter’s browser and disagrees with the tenant’s form often. Read what a report shows before you merge
+it.</p> <!--[0--><p class="stamp svelte-1280m42">desk ref <b class="svelte-1280m42">DR-R9WF-TZGT</b></p><!--]--><!----><!----></main> <footer class="svelte-e2jw2j">Pages are written by people. Tables and charts are built from data at render time.</footer></div><!--]--><!----><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_8tfapk = {
+						base: new URL("../../../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../../../_app/immutable/entry/start.BcVBGXSj.js"),
+						import("../../../../_app/immutable/entry/app.DnEPaCpW.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

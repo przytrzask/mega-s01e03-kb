@@ -12,7 +12,12 @@ signature: 'v1.eyJzdWIiOiIzMDgxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpY
   import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 
-  const TICKETS = {};
+  const repo = 'https://github.com/przytrzask/mega-s01e03-kb/issues';
+  const TICKETS = {
+    parser: { label: '#1', href: `${repo}/1` },
+    hint: { label: '#2', href: `${repo}/2` },
+    'one-day': { label: '#3', href: `${repo}/3` },
+  };
 </script>
 
 [#4471](/kb/incidents/4471) says one bug: the parser reads dates month first. The reports in it show
