@@ -50,16 +50,20 @@ Fix: print the hint in the tenant's order, and read the field in that same order
 "Invite says Tuesday 12 May. Calendar says Monday 11 May." "Client in Lisbon got Tuesday. Client in
 Toronto got Monday." A day–month swap cannot do this: it moves a date by months. These point at a time
 zone or day-boundary fault: a date taken at midnight in one zone and shown in another. The desk had
-already read them as one-day moves (`desk-notes.json`) and footnoted them under `parser`; here they are a
-problem of their own. Fix: store a booking as a calendar date plus the tenant's time zone, not as a
+already read them as one-day moves (`desk-notes.json`) and footnoted them under `parser`; they stay
+counted there, and now have a ticket of their own. Fix: store a booking as a calendar date plus the tenant's time zone, not as a
 midnight timestamp.
 
-## How each report is placed
+## How the reports are counted
+
+The desk's way, the same as the table on [#4471](/kb/incidents/4471):
 
 1. Count each report once: the export repeats some ids.
-2. If the desk read it as a one-day move, it is `one-day`.
-3. Otherwise `causes.ts` decides by tenant, not by intake's tag: a form report from a day-first tenant
-   on `booking-v3` is `hint`; any other report from a day-first tenant is `parser`.
+2. Count it under the cause its tenant files it under (`causes.ts`), not intake's tag: a form report
+   from a day-first tenant on `booking-v3` is `hint`; any other report from a day-first tenant is
+   `parser`.
+3. A report the desk read as a one-day move (`desk-notes.json`) stays counted where it is filed, and is
+   counted under `one-day` too. So the `parser` count includes the `one-day` reports.
 
 The logic is in `#lib/kb/problems.ts`, and the table runs it at render time, so the counts follow the
 data as the desk keeps merging.
